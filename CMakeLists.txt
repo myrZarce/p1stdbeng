@@ -20,10 +20,12 @@ add_library(dbcore STATIC
     policy/PolicyFactory.cpp
     bufpool/BufferPool.cpp
     bufpool/BufferManager.cpp
+        main.cpp
 )
 target_include_directories(dbcore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(p1stdbeng main.cpp)
+add_executable(p1stdbeng main.cpp
+        main.cpp)
 target_link_libraries(p1stdbeng PRIVATE dbcore)
 
 add_executable(p1stdbeng_demo p1db.cpp)

@@ -38,7 +38,7 @@ void check(bool condition, const std::string& message) {
 }
 
 std::string temp_path(const char* suffix) {
-    return std::string("/tmp/ex09-bufman-") + std::to_string(getpid()) + suffix;
+    return std::string("ex09-bufman-") + std::to_string(getpid()) + suffix;
 }
 
 // Seeds `count` blocks; block i is filled with the byte 'a' + i, so a frame's
@@ -549,7 +549,13 @@ int main() {
         mgr.open_file(people_path, file, error);
 
         std::size_t f = 999;
-        mgr.pin(*file, 2, f, error);
+        const bool pinned = mgr.pin(*file, 2, f, error);
+        check(pinned, "pin block 2 for full-block test");
+        if (!pinned) {
+            std::cerr << "pin block 2: " << error << '\n';
+            mgr.close_all(error);
+            return failures == 0 ? 1 : failures;
+        }
         bool all_put = true;
         for (std::size_t i = 0; i < bufman::kRecordsPerBlock; ++i) {
             all_put = all_put && bufman::put_record(mgr.frame(f).buffer, i,

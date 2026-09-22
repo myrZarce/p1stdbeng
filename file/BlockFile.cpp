@@ -8,6 +8,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+
 namespace bufman {
 namespace {
 
@@ -121,7 +125,7 @@ bool locate_append_position(int fd, off_t total_size, std::uint64_t& current_blo
 
 bool open_for_append(const std::string& path, File& file, std::string& error) {
     error.clear();
-    file.fd = ::open(path.c_str(), O_RDWR | O_CREAT, 0644);
+    file.fd = ::open(path.c_str(), O_RDWR | O_CREAT | O_BINARY, 0644);
     if (file.fd < 0) {
         set_error(error, "open for append");
         return false;
@@ -131,7 +135,7 @@ bool open_for_append(const std::string& path, File& file, std::string& error) {
 
 bool open_for_read(const std::string& path, File& file, std::string& error) {
     error.clear();
-    file.fd = ::open(path.c_str(), O_RDONLY);
+    file.fd = ::open(path.c_str(), O_RDONLY | O_BINARY);
     if (file.fd < 0) {
         set_error(error, "open for read");
         return false;
